@@ -6,11 +6,15 @@ body{
   height: 500px;
   width: 500px;
   margin: 0 auto;
-  background: lightSteelBlue;
+  background-color: lightSteelBlue;
   padding: 5px;
 }
 
 td{
-  background: darkSlateGrey;
+  background-color: darkSlateGrey;
   border-radius: 50px;
+}
+
+a[found]{
+  background-color: black;
 }

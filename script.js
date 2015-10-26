@@ -19,7 +19,7 @@ var colors = {
   24: 'yellowGreen',
   26: 'springGreen',
   28: 'seaGreen',
-  30: 'pale',
+  30: 'moccasin',
   32: 'olive',
   34: 'darkOliveGreen',
   36: 'darkCyan',
@@ -36,11 +36,10 @@ var colors = {
   58: 'crimson',
   60: 'darkRed',
   62: 'indianRed',
-  64: 'moccasin',
 };
 var array = [];
 var clickCounter = 0
-var boardColor = $('#board').css('background')
+var boardColor = $('#board').css('background-color')
 var cardColor = ''
 
 var getLevel = function(){
@@ -54,6 +53,7 @@ var makeBoard = function(){
         $('.r'+i).append('<td id = ' +i+j+'></td>');
       }
   }
+  cardColor = $('td').css('background-color')
 }
 
 var getRandomInt = function(upperBound){
@@ -80,11 +80,15 @@ var getRandomAssignments = function(){
 }
 
 var revealColor = function(e){
-  $(e.target).css('background', $(e.target).attr('color'));
+  $(e.target).css('background-color', $(e.target).attr('color'));
 }
 
 var hideColors = function(){
-  $('td').css('background', cardColor)
+  for(i=0; i<$('td').length; i++){
+    if($('td').eq(i).attr('found')!='true'){
+      $('td').eq(i).css('background-color', cardColor);
+    }
+  }
 }
 
 var endTurn = function(){
@@ -92,10 +96,11 @@ var endTurn = function(){
   hideColors();
 }
 
-var alternateTurns = function(){
+var alternateTurns = function(e){
     if(clickCounter<2){
+      revealColor(e);
+      removeMatches(e);
       clickCounter++;
-      console.log(clickCounter);
     }
     else{
       endTurn();
@@ -104,7 +109,7 @@ var alternateTurns = function(){
 
 var cardsRemaining = function(){
   for(i=0; i<$('td').length; i++){
-    if($('td').eq(i).css('background') === 'rgb(47, 79, 79)'){ //background===cardColor
+    if($('td').eq(i).css('background-color') === cardColor){
       return true;
       break;
     }
@@ -114,11 +119,26 @@ var cardsRemaining = function(){
   }
 }
 
+var checkbackground= function(){
+  return $('td').eq(i).css('background-color')
+}
+
+var removeMatches = function(e){
+  var curBack = $(e.target).css('background-color');
+  var curId = $(e.target).attr('id');
+  var curColor = $(e.target).attr('color');
+  for(i=0; i<$('td').length; i++){
+    if(curBack === $('td').eq(i).css('background-color') && curId!=$('td').eq(i).attr('id') && curColor === $('td').eq(i).attr('color')){
+      $(e.target).attr('found', 'true')
+      $('td').eq(i).attr('found', 'true')
+    }
+  }
+}
+
 var playGame = function(){
   getLevel();
   makeBoard();
   getRandomAssignments();
-  $('td').on('click', revealColor)
   $('td').on('click', alternateTurns)
 }
 
