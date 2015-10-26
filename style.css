@@ -1,9 +1,16 @@
+body{
+  background: lightGreen;
+}
+
 #board{
   height: 500px;
   width: 500px;
   margin: 0 auto;
+  background: lightSteelBlue;
+  padding: 5px;
 }
 
 td{
-  background: blue;
+  background: darkSlateGrey;
+  border-radius: 50px;
 }
