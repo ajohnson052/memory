@@ -56,6 +56,7 @@ var makeBoard = function(level){
       }
   }
   cardColor = $('td').css('background-color');
+  $('td').fadeIn(1000);
   numberOfCards = $('td').length;
 }
 
@@ -213,9 +214,17 @@ var celebrate = function(){
   }
 }
 
+var activateReset = function(){
+  $('td').css('background-color', cardColor);
+  array = []
+  getRandomAssignments();
+  $('td').on('click', alternateTurns)
+}
+
 var playGame = function(){
   makeBoard(getLevel());
   getRandomAssignments();
+  $('#reset').on('click', activateReset)
   $('td').on('click', alternateTurns)
 
 }

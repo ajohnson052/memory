@@ -23,6 +23,7 @@ header{
 td{
   background-color: darkSlateGrey;
   border-radius: 50px;
+  display: none;
 }
 
 .winner{
@@ -31,4 +32,16 @@ td{
   position: absolute;
   top:0%;
   display: none;
+}
+
+#reset{
+  font-family: monaco;
+  text-transform: uppercase;
+  border-radius: 50px;
+  margin: 0 auto;
+  width: 50px;
+}
+
+#reset:focus{
+  outline: 0;
 }
