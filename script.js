@@ -41,19 +41,22 @@ var array = [];
 var clickCounter = 0
 var boardColor = $('#board').css('background-color')
 var cardColor = ''
+var numberOfCards = 0
 
 var getLevel = function(){
-  level = parseInt(prompt('Pick a level 1-3'));
+  var level = parseInt(prompt('Pick a level 1-3'));
+  return level;
 }
 
-var makeBoard = function(){
+var makeBoard = function(level){
   for(i=0; i<numberOfRows[level]; i++){
       $('#board').append('<tr class = r'+i+'></tr>');
       for(j=0; j<numberOfRows[level]; j++){
         $('.r'+i).append('<td id = ' +i+j+'></td>');
       }
   }
-  cardColor = $('td').css('background-color')
+  cardColor = $('td').css('background-color');
+  numberOfCards = $('td').length;
 }
 
 var getRandomInt = function(upperBound){
@@ -61,12 +64,12 @@ var getRandomInt = function(upperBound){
 }
 
 var makeRandomArray = function(){
-  var nextInt = getRandomInt($('td').length);
+  var nextInt = getRandomInt(numberOfCards);
   (array.indexOf(nextInt) === -1) ? array.push(nextInt) : makeRandomArray();
 }
 
 var getRandomAssignments = function(){
-  for(i=0; i<$('td').length; i++){
+  for(i=0; i<numberOfCards; i++){
     makeRandomArray();
   }
   for(index in array){
@@ -74,7 +77,7 @@ var getRandomAssignments = function(){
       array[index]= array[index]-1;
     }
   }
-  for(i=0; i<$('td').length; i++){
+  for(i=0; i<numberOfCards; i++){
     $('td').eq(i).attr('color', colors[array[i]]);
   }
 }
@@ -84,36 +87,44 @@ var revealColor = function(e){
 }
 
 var hideColors = function(){
-  for(i=0; i<$('td').length; i++){
-    if($('td').eq(i).attr('found')!='true'){
+  for(i=0; i<numberOfCards; i++){
+    if($('td').eq(i).attr('class')!='found'){
       $('td').eq(i).css('background-color', cardColor);
     }
   }
 }
 
 var endTurn = function(){
-  clickCounter = 0;
+  clickCounter = 1;
   hideColors();
 }
 
 var alternateTurns = function(e){
-    if(clickCounter<2){
-      revealColor(e);
-      removeMatches(e);
-      clickCounter++;
+  if(clickCounter<2 && $(e.target).css('background-color')===cardColor){
+    revealColor(e);
+    removeMatches(e);
+    if(allFound()){
+      celebrate();
     }
-    else{
-      endTurn();
+    clickCounter++;
+  }
+  else{
+    endTurn();
+    revealColor(e);
+    removeMatches(e);
+    if(allFound()){
+      celebrate();
+    }
   }
 }
 
 var cardsRemaining = function(){
-  for(i=0; i<$('td').length; i++){
+  for(i=0; i<numberOfCards; i++){
     if($('td').eq(i).css('background-color') === cardColor){
       return true;
       break;
     }
-    else if(i === $('td').length -1){
+    else if(i === numberOfCards -1){
       return false;
     }
   }
@@ -126,20 +137,87 @@ var checkbackground= function(){
 var removeMatches = function(e){
   var curBack = $(e.target).css('background-color');
   var curId = $(e.target).attr('id');
-  var curColor = $(e.target).attr('color');
-  for(i=0; i<$('td').length; i++){
-    if(curBack === $('td').eq(i).css('background-color') && curId!=$('td').eq(i).attr('id') && curColor === $('td').eq(i).attr('color')){
-      $(e.target).attr('found', 'true')
-      $('td').eq(i).attr('found', 'true')
+  for(i=0; i<numberOfCards; i++){
+    if(curBack === $('td').eq(i).css('background-color') && curId!=$('td').eq(i).attr('id')){
+      $(e.target).attr('class', 'found')
+      $('td').eq(i).attr('class', 'found')
     }
   }
 }
 
+var allFound = function(){
+  for(i=0; i<numberOfCards; i++){
+    if ($('td').eq(i).attr('class')!='found'){
+      return false;
+      break;
+    }
+    else if(i === numberOfCards - 1){
+      return true
+    }
+  }
+}
+
+var fadeOutColumn = function(i){
+  var j=$('tr').length;
+  setInterval(function(){
+    if(j>=0){
+      j--;
+      $('#'+i+j).fadeOut(600);
+    }
+    else{
+      j = $('tr').length;
+    }
+  }, 200)
+}
+
+var fadeInColumn = function(i){
+  var j=$('tr').length;
+  setInterval(function(){
+    if(j>=0){
+      j--;
+      $('#'+i+j).fadeIn(600);
+    }
+    else{
+      j = $('tr').length;
+    }
+  }, 200)
+}
+
+var bounceWinner = function(){
+  var leftBorder = 0;
+  var rightBorder = window.innerWidth - $('.winner').width();
+  var currentX = leftBorder;
+  var slidingRight = true;
+  var moveWinner = function(){
+    if(slidingRight === true){
+      currentX += 2;
+    }
+    else{
+      currentX -= 2;
+    }
+    $('.winner').offset({top:0, left:currentX});
+    if(currentX <= leftBorder || currentX >= rightBorder){
+      slidingRight = !(slidingRight);
+    }
+  }
+  setInterval(moveWinner,1);
+}
+
+
+var celebrate = function(){
+  $('.winner').toggle()
+  bounceWinner();
+  for(i=0; i<$('tr').length; i++){
+    fadeOutColumn(i);
+    fadeInColumn(i);
+  }
+}
+
 var playGame = function(){
-  getLevel();
-  makeBoard();
+  makeBoard(getLevel());
   getRandomAssignments();
   $('td').on('click', alternateTurns)
+
 }
 
 playGame();

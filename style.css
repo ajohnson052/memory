@@ -1,12 +1,22 @@
 body{
-  background: lightGreen;
+  background: bisque;
+}
+
+header{
+  width: 500px;
+  margin: 0 auto;
+  padding: 5px;
+  font-family: monaco;
+  font-size: 30px;
+  letter-spacing: 15px;
+  text-align: center;
 }
 
 #board{
   height: 500px;
   width: 500px;
   margin: 0 auto;
-  background-color: lightSteelBlue;
+  background-color: mediumAquaMarine;
   padding: 5px;
 }
 
@@ -15,6 +25,10 @@ td{
   border-radius: 50px;
 }
 
-a[found]{
-  background-color: black;
+.winner{
+  font-family: monaco;
+  font-size: 80px;
+  position: absolute;
+  top:0%;
+  display: none;
 }
