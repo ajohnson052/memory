@@ -20,28 +20,46 @@ header{
   padding: 5px;
 }
 
+.buttons{
+  width: 500px;
+  margin: 0 auto;
+  padding: 5px;
+}
+
 td{
   background-color: darkSlateGrey;
   border-radius: 50px;
   display: none;
 }
 
-.winner{
+.endGame{
   font-family: monaco;
   font-size: 80px;
   position: absolute;
   top:0%;
   display: none;
+  text-transform: uppercase;
 }
 
-#reset{
+button{
   font-family: monaco;
   text-transform: uppercase;
   border-radius: 50px;
   margin: 0 auto;
-  width: 50px;
+  background: bisque;
+  display: inline;
+  float:right;
 }
 
-#reset:focus{
+#status{
+  font-family: monaco;
+  text-transform: uppercase;
+  border-radius: 50px;
+  margin: 0 auto;
+  float:left;
+}
+
+
+button:focus{
   outline: 0;
 }
