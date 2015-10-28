@@ -5,39 +5,39 @@ var numberOfRows = {
 };
 var numberOfTurns = {
   1:16,
-  2:32,
-  3:64,
+  2:36,
+  3:64
 };
 var colors = {
-  0: 'darkSalmon',
-  2: 'blueViolet',
+  0: 'lightSalmon',
+  2: 'springGreen',
   4: 'darkGoldenRod',
   6: 'aquamarine',
-  8: 'darkSeaGreen',
+  8: 'moccasin',
   10: 'purple',
   12: 'darkSlateBlue',
-  14: 'dodgerBlue',
+  14: 'cornFlowerBlue',
   16: 'coral',
   18: 'gold',
   20: 'orangeRed',
   22: 'orange',
-  24: 'yellowGreen',
-  26: 'springGreen',
+  24: 'darkSeaGreen',
+  26: 'orchid',
   28: 'seaGreen',
-  30: 'moccasin',
-  32: 'olive',
+  30: 'yellowGreen',
+  32: 'rosyBrown',
   34: 'darkOliveGreen',
   36: 'darkCyan',
   38: 'lightCyan',
-  40: 'cornFlowerBlue',
-  42: 'deepSkyBlue',
+  40: 'deepSkyBlue',
+  42: 'chocolate',
   44: 'royalBlue',
   46: 'midnightBlue',
-  48: 'darkMagenta',
+  48: 'grey',
   50: 'darkOrchid',
   52: 'indigo',
   54: 'slateBlue',
-  56: 'orchid',
+  56: 'gainsboro',
   58: 'crimson',
   60: 'darkRed',
   62: 'indianRed',
@@ -109,30 +109,29 @@ var hideColors = function(){
 
 var endTurn = function(){
   clickCounter = 1;
+  console.log(clickCounter)
   hideColors();
 }
 
 var getResult = function(){
   if(allFound()){
     celebrate();
-    return true;
   }
   else if(turnCounter < 1){
     $('#tryAgain').toggle()
     bounceResult('tryAgain');
-    return true;
+    $('td').off();
   }
 }
 
 var alternateTurns = function(e){
-  if (clickCounter < 2 && $(e.target).css('background-color')===cardColor) {
+  if (clickCounter < 2 && $(e.target).css('background-color')===cardColor){
     revealColor(e);
     removeMatches(e);
     getResult();
     clickCounter++;
-  }
-  else if (clickCounter < 2) {}
-  else {
+    console.log(clickCounter);
+  } else if ($(e.target).attr('class')!='found' && clickCounter ===2 ) {
     getResult();
     endTurn();
     turnCounter--;
@@ -222,6 +221,7 @@ var celebrate = function(){
 
 var activateReset = function(){
   clearAnimation();
+  $('td').off();
   clickCounter = 0;
   turnCounter = numberOfTurns[level];
   $('td').removeClass('found');
@@ -229,6 +229,7 @@ var activateReset = function(){
   $('td').css('background-color', cardColor);
   randomArray = [];
   getRandomAssignments();
+  $('td').on('click', alternateTurns)
 }
 
 var getNewLevel = function(e){
@@ -236,11 +237,12 @@ var getNewLevel = function(e){
   $('#board').empty();
   makeBoard(level);
   activateReset();
-  $('td').on('click', alternateTurns);
 }
 
 var clearAnimation = function(){
   $('.endGame').css('display', 'none');
+  $('.endGame').css('top', '0');
+  $('.endGame').css('left',  '0');
   window.clearInterval(endResult);
   for(i=0; i<$('tr').length; i++){
     window.clearInterval(fadeOutInterval[i]);
@@ -260,3 +262,6 @@ var playGame = function(){
 }
 
 playGame();
+// for(i=0; i<numberOfCards; i++){
+//   $('td').eq(i).css('background',$('td').eq(i).attr('color'))
+// }
