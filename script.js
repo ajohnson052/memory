@@ -4,9 +4,9 @@ var numberOfRows = {
   3:8
 };
 var numberOfTurns = {
-  1:10,
-  2:30,
-  3:60,
+  1:16,
+  2:32,
+  3:64,
 };
 var colors = {
   0: 'darkSalmon',
@@ -43,16 +43,18 @@ var colors = {
   62: 'indianRed',
 };
 var randomArray = [];
-var clickCounter = 0
-var boardColor = $('#board').css('background-color')
-var cardColor = ''
-var numberOfCards = 0
-var fadeOutInterval = []
-var fadeInInterval = []
-var turnCounter = 0
+var clickCounter = 0;
+var boardColor = $('#board').css('background-color');
+var cardColor = '';
+var numberOfCards = 0;
+var fadeOutInterval = [];
+var fadeInInterval = [];
+var endResult
+var turnCounter = 0;
+var level = 0;
 
 var setLevel = function(){
-  var level = parseInt(prompt('Pick a level 1-3'));
+  level = parseInt(prompt('Pick a level 1-3','1, 2, or 3'));
   turnCounter = numberOfTurns[level];
   $('#turn').text(turnCounter);
   return level;
@@ -110,46 +112,34 @@ var endTurn = function(){
   hideColors();
 }
 
-var alternateTurns = function(e){
-  if(turnCounter === 0){
+var getResult = function(){
+  if(allFound()){
+    celebrate();
+    return true;
+  }
+  else if(turnCounter < 1){
     $('#tryAgain').toggle()
     bounceResult('tryAgain');
+    return true;
   }
-  else if(clickCounter<2 && $(e.target).css('background-color')===cardColor){
+}
+
+var alternateTurns = function(e){
+  if (clickCounter < 2 && $(e.target).css('background-color')===cardColor) {
     revealColor(e);
     removeMatches(e);
-    if(allFound()){
-      celebrate();
-    }
+    getResult();
     clickCounter++;
   }
-  else if(clickCounter<2){}
-  else{
+  else if (clickCounter < 2) {}
+  else {
+    getResult();
     endTurn();
     turnCounter--;
     $('#turn').text(turnCounter);
     revealColor(e);
     removeMatches(e);
-    if(allFound()){
-      celebrate();
-    }
   }
-}
-
-var cardsRemaining = function(){
-  for(i=0; i<numberOfCards; i++){
-    if($('td').eq(i).css('background-color') === cardColor){
-      return true;
-      break;
-    }
-    else if(i === numberOfCards -1){
-      return false;
-    }
-  }
-}
-
-var checkbackground= function(){
-  return $('td').eq(i).css('background-color')
 }
 
 var removeMatches = function(e){
@@ -218,9 +208,8 @@ var bounceResult = function(element){
       slidingRight = !(slidingRight);
     }
   }
-  setInterval(moveResult,1);
+  endResult = setInterval(moveResult,1);
 }
-
 
 var celebrate = function(){
   $('#winner').toggle()
@@ -232,34 +221,32 @@ var celebrate = function(){
 }
 
 var activateReset = function(){
-  $('.endGame').css('display', 'none');
-  for(i=0; i<$('tr').length; i++){
-    window.clearInterval(fadeOutInterval[i]);
-    window.clearInterval(fadeInInterval[i]);
-  }
+  clearAnimation();
+  clickCounter = 0;
   turnCounter = numberOfTurns[level];
+  $('td').removeClass('found');
   $('#turn').text(turnCounter);
   $('td').css('background-color', cardColor);
-  $('td').css('opacity', 1);
-  randomArray = []
+  randomArray = [];
   getRandomAssignments();
-  $('td').on('click', alternateTurns)
 }
 
 var getNewLevel = function(e){
   level = $(e.target).attr('level')
+  $('#board').empty();
+  makeBoard(level);
+  activateReset();
+  $('td').on('click', alternateTurns);
+}
+
+var clearAnimation = function(){
   $('.endGame').css('display', 'none');
+  window.clearInterval(endResult);
   for(i=0; i<$('tr').length; i++){
     window.clearInterval(fadeOutInterval[i]);
     window.clearInterval(fadeInInterval[i]);
   }
-  turnCounter = numberOfTurns[level];
-  $('#turn').text(turnCounter);
-  $('#board').empty();
-  randomArray = []
-  makeBoard(level);
-  getRandomAssignments();
-  $('td').on('click', alternateTurns)
+  $('td').css('opacity', 1);
 }
 
 var playGame = function(){
