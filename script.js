@@ -109,7 +109,6 @@ var hideColors = function(){
 
 var endTurn = function(){
   clickCounter = 1;
-  console.log(clickCounter)
   hideColors();
 }
 
@@ -130,7 +129,6 @@ var alternateTurns = function(e){
     removeMatches(e);
     getResult();
     clickCounter++;
-    console.log(clickCounter);
   } else if ($(e.target).attr('class')!='found' && clickCounter ===2 ) {
     getResult();
     endTurn();
@@ -233,7 +231,7 @@ var activateReset = function(){
 }
 
 var getNewLevel = function(e){
-  level = $(e.target).attr('level')
+  level = $(e.target).attr('id').charAt(5);
   $('#board').empty();
   makeBoard(level);
   activateReset();
@@ -262,6 +260,3 @@ var playGame = function(){
 }
 
 playGame();
-// for(i=0; i<numberOfCards; i++){
-//   $('td').eq(i).css('background',$('td').eq(i).attr('color'))
-// }
