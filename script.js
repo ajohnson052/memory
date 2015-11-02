@@ -3,7 +3,7 @@ var numberOfRows = {
   2:6,
   3:8
 };
-var numberOfTurns = {
+var numberOfTurns = {  // jsm: Could maybe use arrays here and above
   1:10,
   2:30,
   3:60,
@@ -49,7 +49,7 @@ var cardColor = ''
 var numberOfCards = 0
 var fadeOutInterval = []
 var fadeInInterval = []
-var turnCounter = 0
+var turnCounter = 0 // jsm: well structured!
 
 var setLevel = function(){
   var level = parseInt(prompt('Pick a level 1-3'));
@@ -72,7 +72,7 @@ var makeBoard = function(level){
 
 var getRandomInt = function(upperBound){
   return Math.floor(Math.random()*upperBound);
-}
+} // jsm: I really like this function. When did you write it?
 
 var makeRandomArray = function(){
   var nextInt = getRandomInt(numberOfCards);
@@ -272,4 +272,4 @@ var playGame = function(){
   }
 }
 
-playGame();
+playGame(); //jsm: Nice! Really did a great job breaking tasks into modular functions
