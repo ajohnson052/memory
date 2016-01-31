@@ -49,7 +49,7 @@ var cardColor = '';
 var numberOfCards = 0;
 var fadeOutInterval = [];
 var fadeInInterval = [];
-var endResult
+var endResult;
 var turnCounter = 0;
 var level = 0;
 
@@ -58,7 +58,7 @@ var setLevel = function(){
   turnCounter = numberOfTurns[level];
   $('#turn').text(turnCounter);
   return level;
-}
+};
 
 var makeBoard = function(level){
   for(i=0; i<numberOfRows[level]; i++){
@@ -70,34 +70,34 @@ var makeBoard = function(level){
   cardColor = $('td').css('background-color');
   $('td').fadeIn(1000);
   numberOfCards = $('td').length;
-}
+};
 
 var getRandomInt = function(upperBound){
   return Math.floor(Math.random()*upperBound);
-}
+};
 
 var makeRandomArray = function(){
   var nextInt = getRandomInt(numberOfCards);
   (randomArray.indexOf(nextInt) === -1) ? randomArray.push(nextInt) : makeRandomArray();
-}
+};
 
 var getRandomAssignments = function(){
   for(i=0; i<numberOfCards; i++){
     makeRandomArray();
   }
-  for(index in randomArray){
-    if(randomArray[index]%2!=0){
+  for(var index in randomArray){
+    if(randomArray[index]%2!==0){
       randomArray[index]= randomArray[index]-1;
     }
   }
   for(i=0; i<numberOfCards; i++){
     $('td').eq(i).attr('color', colors[randomArray[i]]);
   }
-}
+};
 
 var revealColor = function(e){
   $(e.target).css('background-color', $(e.target).attr('color'));
-}
+};
 
 var hideColors = function(){
   for(i=0; i<numberOfCards; i++){
@@ -105,23 +105,23 @@ var hideColors = function(){
       $('td').eq(i).css('background-color', cardColor);
     }
   }
-}
+};
 
 var endTurn = function(){
   clickCounter = 1;
   hideColors();
-}
+};
 
 var getResult = function(){
   if(allFound()){
     celebrate();
   }
   else if(turnCounter < 1){
-    $('#tryAgain').toggle()
+    $('#tryAgain').toggle();
     bounceResult('tryAgain');
     $('td').off();
   }
-}
+};
 
 var alternateTurns = function(e){
   if (clickCounter < 2 && $(e.target).css('background-color')===cardColor){
@@ -137,18 +137,18 @@ var alternateTurns = function(e){
     revealColor(e);
     removeMatches(e);
   }
-}
+};
 
 var removeMatches = function(e){
   var curBack = $(e.target).css('background-color');
   var curId = $(e.target).attr('id');
   for(i=0; i<numberOfCards; i++){
     if(curBack === $('td').eq(i).css('background-color') && curId!=$('td').eq(i).attr('id')){
-      $(e.target).attr('class', 'found')
-      $('td').eq(i).attr('class', 'found')
+      $(e.target).attr('class', 'found');
+      $('td').eq(i).attr('class', 'found');
     }
   }
-}
+};
 
 var allFound = function(){
   for(i=0; i<numberOfCards; i++){
@@ -157,10 +157,10 @@ var allFound = function(){
       break;
     }
     else if(i === numberOfCards - 1){
-      return true
+      return true;
     }
   }
-}
+};
 
 var fadeOutColumn = function(i){
   var j=$('tr').length;
@@ -172,8 +172,8 @@ var fadeOutColumn = function(i){
     else{
       j = $('tr').length;
     }
-  }, 300)
-}
+  }, 300);
+};
 
 var fadeInColumn = function(i){
   var j=$('tr').length;
@@ -185,8 +185,8 @@ var fadeInColumn = function(i){
     else{
       j = $('tr').length;
     }
-  }, 300)
-}
+  }, 300);
+};
 
 var bounceResult = function(element){
   var leftBorder = 0;
@@ -204,18 +204,18 @@ var bounceResult = function(element){
     if(currentX <= leftBorder || currentX >= rightBorder){
       slidingRight = !(slidingRight);
     }
-  }
+  };
   endResult = setInterval(moveResult,1);
-}
+};
 
 var celebrate = function(){
-  $('#winner').toggle()
+  $('#winner').toggle();
   bounceResult('winner');
   for(i=0; i<$('tr').length; i++){
     fadeOutColumn(i);
     fadeInColumn(i);
   }
-}
+};
 
 var activateReset = function(){
   clearAnimation();
@@ -227,15 +227,15 @@ var activateReset = function(){
   $('td').css('background-color', cardColor);
   randomArray = [];
   getRandomAssignments();
-  $('td').on('click', alternateTurns)
-}
+  $('td').on('click', alternateTurns);
+};
 
 var getNewLevel = function(e){
   level = $(e.target).attr('id').charAt(5);
   $('#board').empty();
   makeBoard(level);
   activateReset();
-}
+};
 
 var clearAnimation = function(){
   $('.endGame').css('display', 'none');
@@ -247,16 +247,16 @@ var clearAnimation = function(){
     window.clearInterval(fadeInInterval[i]);
   }
   $('td').css('opacity', 1);
-}
+};
 
 var playGame = function(){
   makeBoard(setLevel());
   getRandomAssignments();
-  $('#reset').on('click', activateReset)
-  $('td').on('click', alternateTurns)
+  $('#reset').on('click', activateReset);
+  $('td').on('click', alternateTurns);
   for(i=1; i<=3; i++){
-    $('#level'+i).on('click', getNewLevel)
+    $('#level'+i).on('click', getNewLevel);
   }
-}
+};
 
 playGame();
