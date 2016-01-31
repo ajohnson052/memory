@@ -154,7 +154,6 @@ var allFound = function(){
   for(i=0; i<numberOfCards; i++){
     if ($('td').eq(i).attr('class')!='found'){
       return false;
-      break;
     }
     else if(i === numberOfCards - 1){
       return true;
